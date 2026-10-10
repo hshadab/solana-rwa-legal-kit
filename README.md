@@ -20,6 +20,7 @@ This repository publishes that missing layer as a public good.
 | --- | --- |
 | [Transfer restriction schedule](docs/transfer-restriction-schedule.md) | Draft, pending verification against MPL-3643 program documentation |
 | [Disclosure standard](docs/disclosure-standard.md) | Draft v0.1, with [JSON Schema](schema/rwa-disclosure-v0.1.json) and a [worked example](examples/example-disclosure.json) |
+| [Reference mint on devnet](demo/README.md) | Live: [`9Ku4Fd54...GeX3e`](https://explorer.solana.com/address/9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e?cluster=devnet) |
 | Model token terms and conditions | Planned |
 | Subscription agreement and investor questionnaire | Planned |
 | Risk factors, including Solana and MPL-3643 specific risks | Planned |

@@ -1,0 +1,21 @@
+{
+  "network": "devnet",
+  "mint": "9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e",
+  "tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+  "decimals": 6,
+  "mintAuthority": "GLrtgqoFJFTn6se7Fi1Thnwo7HbTYbkeTSw63Fnir5wC",
+  "freezeAuthority": "GLrtgqoFJFTn6se7Fi1Thnwo7HbTYbkeTSw63Fnir5wC",
+  "permanentDelegate": "GLrtgqoFJFTn6se7Fi1Thnwo7HbTYbkeTSw63Fnir5wC",
+  "defaultAccountState": "frozen",
+  "transferHookProgram": null,
+  "signature": "5YZ2xoArK29amqHaXMP99UYBBQxVWvkE6ALMUopnp2MQmBX6851ax9AqjvgE6of7TWDwSpm7wLL2D19AMpqZE9AK",
+  "explorer": "https://explorer.solana.com/address/9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e?cluster=devnet",
+  "createdAt": "2026-10-10T10:41:58.585Z",
+  "additionalMetadata": {
+    "disclosure_standard": "rwa-disclosure-v0.1",
+    "restrictions": "US-1,US-6,US-9,US-10,US-12,US-13",
+    "purpose": "reference example; not a security; no value",
+    "repo": "github.com/hshadab/solana-rwa-legal-kit"
+  },
+  "metadataSignature": "4wAPAzRNjug3wFQ9bjPqYK2XMGPy3p4mNDsYuT8v9RRppRYEXqfpyar8rgBdyY1MENFjzJgvA9ytzg4y1Ng51JpY"
+}

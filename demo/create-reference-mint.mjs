@@ -23,7 +23,7 @@
 
 import {
   Connection, Keypair, SystemProgram, Transaction,
-  sendAndConfirmTransaction, LAMPORTS_PER_SOL, clusterApiUrl,
+  sendAndConfirmTransaction, LAMPORTS_PER_SOL, clusterApiUrl, PublicKey,
 } from '@solana/web3.js';
 import {
   TOKEN_2022_PROGRAM_ID, ExtensionType, getMintLen, AccountState,
@@ -119,7 +119,9 @@ const main = async () => {
     createInitializeMetadataPointerInstruction(mint, authority, mint, TOKEN_2022_PROGRAM_ID),
     createInitializeDefaultAccountStateInstruction(mint, AccountState.Frozen, TOKEN_2022_PROGRAM_ID),
     createInitializePermanentDelegateInstruction(mint, authority, TOKEN_2022_PROGRAM_ID),
-    createInitializeTransferHookInstruction(mint, authority, null, TOKEN_2022_PROGRAM_ID),
+    // PublicKey.default (all zeros) is how Token-2022 represents "no hook program
+    // assigned". The extension slot exists; nothing runs on transfer.
+    createInitializeTransferHookInstruction(mint, authority, PublicKey.default, TOKEN_2022_PROGRAM_ID),
     createInitializeMintInstruction(mint, DECIMALS, authority, authority, TOKEN_2022_PROGRAM_ID),
     // Metadata is written after the mint is initialized.
     createInitializeInstruction({

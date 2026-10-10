@@ -17,6 +17,8 @@ Every restriction is assigned to one of four enforcement mechanisms:
 
 The fourth category matters most. A restriction that is off-chain only must still appear in the offering documents, and the documents must not imply that the token enforces it.
 
+A live reference mint on devnet demonstrates four of these mechanisms: `9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e` ([explorer](https://explorer.solana.com/address/9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e?cluster=devnet), [how it is built](../demo/README.md)). Its on-chain metadata names the restrictions it implements, so the schedule can be checked against a real account.
+
 > **Verification needed.** The mechanism assignments below reflect MPL-3643's published architecture: four programs (Identity Registry, Compliance Module, Gate, Lifecycle Manager) built over Token-2022, Token ACL (sRFC 37), and the Solana Attestation Service, with eligibility enforced at freeze and thaw and per-transfer rules handled by transfer hooks. Specific program parameters, attestation schemas, and configuration field names are **not yet filled in** and must be verified against the Metaplex documentation and the alpha release. MPL-3643 is in limited-access alpha and has not completed a full security audit. Do not rely on this schedule for a live offering until those cells are completed and reviewed.
 
 ## United States

@@ -28,3 +28,31 @@ The script uses `payer.json` if present, otherwise generates one and attempts a 
 Output is written to `reference-mint.json` with the mint address, the authorities, and the transaction signature.
 
 **Key custody.** The payer keypair is the mint authority, the freeze authority and the permanent delegate for the mint it creates. `payer.json` is gitignored. Generate it on a machine you control rather than reusing a key from elsewhere, and treat it as disposable: this is a devnet demonstration, not an issuance.
+
+## The reference mint
+
+`9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e` on devnet ([explorer](https://explorer.solana.com/address/9Ku4Fd54Tr8U8Mzw3a3iLMQ6YqjMrNkHTU943c4GeX3e?cluster=devnet)), created by `create-reference-mint.mjs` in this directory.
+
+| Property | Value |
+| --- | --- |
+| Token program | Token-2022 (`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`) |
+| Decimals | 6 |
+| Supply | 0 |
+| Default account state | Frozen |
+| Permanent delegate | Set |
+| Transfer hook | Extension initialized, no program assigned |
+| Metadata pointer | Self-referential, with `tokenMetadata` written in place |
+
+On-chain metadata fields:
+
+```
+name                 RWA Legal Kit Reference
+symbol               RWALK
+uri                  .../examples/example-disclosure.json
+disclosure_standard  rwa-disclosure-v0.1
+restrictions         US-1,US-6,US-9,US-10,US-12,US-13
+purpose              reference example; not a security; no value
+repo                 github.com/hshadab/solana-rwa-legal-kit
+```
+
+The `restrictions` field is the point of the exercise: the mint states which rows of the schedule it implements, so anyone can read the account and check the claim rather than taking the document's word for it.
