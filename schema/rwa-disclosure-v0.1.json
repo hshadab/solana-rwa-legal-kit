@@ -128,6 +128,66 @@
             "upgradeAuthority": { "type": ["string", "null"] },
             "heldBy": { "type": ["string", "null"] }
           }
+        },
+        "enforcement": {
+          "type": "object",
+          "description": "Recommended. How transfer restrictions are actually enforced. For MPL-3643 tokens this describes a mechanism, not a person: the freeze authority is a Token ACL MintConfig PDA delegating thaw decisions to the Gate Program, and a recovery-enabled permanent delegate is a keyless Lifecycle Manager address.",
+          "required": ["standard"],
+          "properties": {
+            "standard": {
+              "type": "string",
+              "enum": ["mpl-3643", "token-2022-direct", "none"]
+            },
+            "modules": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["country", "holderCap", "investorCap", "lockup", "affiliateVolume", "blackout", "jurisdictionPair", "venue"]
+              },
+              "description": "Enabled MPL-3643 compliance modules. The module set may change before release."
+            },
+            "gateProgram": {
+              "type": ["string", "null"],
+              "description": "Address of the gate config governing thaw decisions"
+            },
+            "claimTopics": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Topics an eligible holder must carry, e.g. KYC, AML, residency, accreditation, sanctions screening"
+            },
+            "trustedAttestors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["address", "name", "topics"],
+                "properties": {
+                  "address": { "type": "string" },
+                  "name": { "type": "string" },
+                  "topics": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            },
+            "claimExpiry": {
+              "type": "string",
+              "description": "How long a claim remains valid, and what happens on lapse. Vagueness here is consequential."
+            },
+            "crankerOperator": {
+              "type": "string",
+              "description": "Who calls freeze_permissionless on holders who fall out of compliance, and how often. Permissionless re-freeze protects no one unless someone runs it."
+            },
+            "recoveryEnabled": {
+              "type": "boolean",
+              "description": "Whether a permanent delegate exists. A mint without one cannot be clawed back, which holders should know either way."
+            },
+            "irreversible": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["mintTokensAuthorityTransferred", "holderCapActivated", "tokenAclConfigSealed"]
+              },
+              "description": "Configuration choices that cannot be undone"
+            }
+          }
         }
       }
     },
@@ -178,11 +238,24 @@
     },
     "fees": {
       "type": "object",
-      "description": "Recommended, not required",
+      "description": "Recommended, not required. Protocol fees are stated separately from the issuer's own.",
       "properties": {
         "management": { "type": "string" },
         "redemption": { "type": "string" },
-        "transfer": { "type": "string" }
+        "transfer": { "type": "string" },
+        "protocol": {
+          "type": "object",
+          "description": "Fees charged by the protocol, not the issuer. MPL-3643 charges in SOL per event.",
+          "properties": {
+            "assetConfiguration": { "type": "string" },
+            "holderActivation": { "type": "string" },
+            "distributionPerRecipient": { "type": "string" },
+            "borneBy": {
+              "type": "string",
+              "description": "Who pays each protocol fee: the issuer, the holder, or a mix"
+            }
+          }
+        }
       }
     },
     "valuation": {

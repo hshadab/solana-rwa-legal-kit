@@ -42,6 +42,28 @@
       "programsUpgradeable": false,
       "upgradeAuthority": null,
       "heldBy": null
+    },
+    "enforcement": {
+      "standard": "mpl-3643",
+      "modules": ["country", "investorCap", "lockup", "affiliateVolume"],
+      "gateProgram": "Examp1eGateConfig1111111111111111111111111",
+      "claimTopics": ["KYC", "AML", "residency", "accreditation", "sanctions-screening"],
+      "trustedAttestors": [
+        {
+          "address": "Examp1eAttestor11111111111111111111111111",
+          "name": "Example Verification Services LLC",
+          "topics": ["KYC", "AML", "accreditation", "sanctions-screening"]
+        },
+        {
+          "address": "Examp1eAttestor22222222222222222222222222",
+          "name": "Meridian Credit Partners SPC LLC (self-attested residency)",
+          "topics": ["residency"]
+        }
+      ],
+      "claimExpiry": "KYC and AML claims expire 12 months after issuance. Sanctions screening claims expire 30 days after issuance. Accreditation claims expire 12 months after issuance, consistent with Rule 506(c) verification practice. A holder whose claim lapses is re-frozen and cannot transfer until the claim is renewed; the holder retains economic rights throughout.",
+      "crankerOperator": "The manager operates the re-freeze cranker and runs it at least once every 24 hours. A third party may also call freeze_permissionless at any time, since the instruction is permissionless.",
+      "recoveryEnabled": true,
+      "irreversible": ["mintTokensAuthorityTransferred", "tokenAclConfigSealed"]
     }
   },
 
@@ -71,7 +93,13 @@
   "fees": {
     "management": "1.00% per annum of net asset value, accrued daily",
     "redemption": "None within standard windows; 0.50% for off-window redemptions at the manager's discretion",
-    "transfer": "None charged by the issuer; network fees apply"
+    "transfer": "None charged by the issuer; network fees apply",
+    "protocol": {
+      "assetConfiguration": "0.063 SOL per configuration or amendment",
+      "holderActivation": "0.034 SOL per holder account activation",
+      "distributionPerRecipient": "0.00085 SOL per recipient per distribution",
+      "borneBy": "The issuer pays asset configuration and holder activation fees. Distribution fees are netted against the distribution."
+    }
   },
 
   "valuation": {

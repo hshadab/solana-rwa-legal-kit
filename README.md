@@ -6,7 +6,7 @@ Open-source offering documents, a legal-to-on-chain transfer restriction mapping
 
 ## Why this exists
 
-Metaplex launched MPL-3643 on September 29, 2026, giving Solana a shared on-chain compliance layer for permissioned assets: an Identity Registry, Compliance Module, Gate, and Lifecycle Manager built over Token-2022, Token ACL (sRFC 37), and the Solana Attestation Service.
+Metaplex launched MPL-3643 on September 29, 2026, giving Solana a shared on-chain compliance layer for permissioned assets: an Identity Registry, Compliance Module, Gate Program, and Lifecycle Manager built over Token-2022, Token ACL (sRFC 37), and the Solana Attestation Service. It is live on mainnet in early access, unaudited, and marked Experimental, with Metaplex advising issuers not to custody real assets without coordinating with them.
 
 The on-chain layer now exists. The legal layer does not.
 
@@ -37,7 +37,9 @@ The **disclosure standard** defines what an issuer must publish about a tokenize
 
 The **transfer restriction schedule** is the other: a table where each row states a legal restriction, the authority it comes from, the words that express it in the offering documents, and the on-chain mechanism that enforces it. A lawyer and an engineer can read the same row and confirm the token does what the documents promise.
 
-Solana's enforcement model makes this mapping chain-specific rather than cosmetic. Unlike ERC-3643 on EVM chains, which checks compliance inside every transfer, MPL-3643 enforces eligibility at freeze and thaw: token accounts are created frozen, and only a wallet that passes the compliance checks can have one thawed. Rules that genuinely require per-transfer evaluation, such as lockups and volume limits, use a Token-2022 transfer hook instead. A Regulation S distribution compliance period and a Rule 144 holding period therefore map to different mechanisms than they would on Ethereum, and the documents have to say which.
+Solana's enforcement model makes this mapping chain-specific rather than cosmetic. Unlike ERC-3643 on EVM chains, which checks compliance inside every transfer, MPL-3643 splits enforcement in two. **Boundary enforcement** decides who may hold the token at all: accounts are born frozen, the freeze authority belongs to a Token ACL `MintConfig` PDA, and the Gate Program decides each thaw against Identity Registry claims. Thaw is permissionless, and so is re-freeze when a holder falls out of compliance. **Per-transfer enforcement** is opt-in, runs through a Token-2022 transfer hook, and is where time-based and cumulative rules live.
+
+That split is the thing a lawyer has to understand. A Regulation S residency restriction is a boundary rule; a Regulation S distribution compliance period is a per-transfer rule; and the transfer hook cannot be added to a mint after creation, so the choice is made before the first token exists.
 
 ## Scope
 

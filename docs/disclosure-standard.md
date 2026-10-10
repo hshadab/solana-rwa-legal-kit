@@ -79,9 +79,25 @@ The required core of the standard. Every power over holder tokens must be disclo
 | `controls.canForceTransfer` | boolean | Whether the issuer can move holder tokens without holder signature |
 | `controls.canPause` | boolean | Whether transfers can be globally halted |
 | `controls.transferRestrictions` | array | References to the restriction identifiers in the transfer restriction schedule, for example `["US-1", "US-6", "US-12"]` |
-| `controls.upgradeable` | boolean | Whether any program governing the token can be upgraded, and by whom |
+| `controls.upgradeable` | object | Whether any program governing the token can be upgraded, and by whom |
 
 `heldBy` names the human or entity controlling the key, not just the address. An address alone tells a reader nothing about who can act.
+
+**For MPL-3643 tokens, `heldBy` has to describe a mechanism rather than a person.** The freeze authority is a Token ACL `MintConfig` PDA that delegates each thaw decision to the Gate Program, and a recovery-enabled mint's permanent delegate is a Lifecycle Manager address with no private key, signing only through guardrailed instructions with separate proposer and approver roles and a timelock. Both are stronger than an issuer-held key, and a disclosure that renders them as "issuer holds the key" understates the protections. The recommended `controls.enforcement` object captures the difference:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `controls.enforcement.standard` | string | `"mpl-3643"`, `"token-2022-direct"`, or `"none"` |
+| `controls.enforcement.modules` | array | Enabled compliance modules, from the MPL-3643 set: `country`, `holderCap`, `investorCap`, `lockup`, `affiliateVolume`, `blackout`, `jurisdictionPair`, `venue` |
+| `controls.enforcement.gateProgram` | string | Address of the gate config governing thaw decisions |
+| `controls.enforcement.claimTopics` | array | Topics an eligible holder must carry, such as KYC, AML, residency, accreditation, sanctions screening |
+| `controls.enforcement.trustedAttestors` | array | `{ "address": string, "name": string, "topics": array }` for each attestor in the token's trust scope |
+| `controls.enforcement.claimExpiry` | string | How long a claim remains valid, and what happens on lapse |
+| `controls.enforcement.crankerOperator` | string | Who calls `freeze_permissionless` on holders who fall out of compliance, and how often |
+| `controls.enforcement.recoveryEnabled` | boolean | Whether a permanent delegate exists at all. A mint without one cannot be clawed back, which holders should know either way |
+| `controls.enforcement.irreversible` | array | Configuration choices that cannot be undone, such as `mintTokensAuthorityTransferred`, `holderCapActivated` |
+
+`crankerOperator` and `claimExpiry` are the two fields most likely to be left vague and most consequential. Permissionless re-freeze only protects anyone if someone actually runs it.
 
 ### Custody and redemption
 
@@ -105,6 +121,8 @@ The required core of the standard. Every power over holder tokens must be disclo
 
 Not required, but materially useful: `fees` (management, redemption, transfer), `valuation` (methodology and frequency), `riskFactors` (URI), `transferAgent`, `secondaryVenues`, and `priorIncidents`.
 
+**Protocol fees belong under `fees`, separately from the issuer's own.** MPL-3643 charges in SOL: 0.063 per asset configuration or amendment, 0.034 per holder account activation, and 0.00085 per distribution recipient. A holder paying 0.034 SOL to be onboarded is paying a fee, and it is not the issuer's management fee. Use `fees.protocol` with the per-event amounts and say who bears each one.
+
 ## Validation
 
 A conforming validator checks:
@@ -114,8 +132,9 @@ A conforming validator checks:
 3. `publishedAt` is in the past and `validUntil` is in the future.
 4. Declared on-chain controls match what the mint actually shows. If `controls.permanentDelegate` is `null` but the mint has the permanent delegate extension enabled, the disclosure fails validation.
 5. Every identifier in `controls.transferRestrictions` exists in the transfer restriction schedule.
+6. For `enforcement.standard` of `"mpl-3643"`: the mint's freeze authority is a Token ACL `MintConfig` PDA rather than an ordinary keypair, and the declared `modules` match the compliance config on chain. A token claiming MPL-3643 enforcement while holding its own freeze authority is making a materially false statement about who controls holder accounts.
 
-Point 4 is the one that gives the standard teeth. It is the only check that compares a claim against the chain, and it catches the most consequential kind of misstatement.
+Points 4 and 6 are what give the standard teeth. They are the only checks that compare a claim against the chain, and they catch the most consequential kind of misstatement.
 
 **What validation does not do.** It does not verify that the named custodian holds the asset, that the audit reports are genuine, or that the offering documents say what the disclosure says they say. Any interface displaying a validated disclosure must say so.
 
