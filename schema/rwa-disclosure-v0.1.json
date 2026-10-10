@@ -136,7 +136,30 @@
           "properties": {
             "standard": {
               "type": "string",
-              "enum": ["mpl-3643", "token-2022-direct", "none"]
+              "description": "The permissioned token framework. All of these compose the same Solana primitives (frozen-by-default accounts, transfer hook, permanent delegate); they differ on who holds the thaw decision, whether wallets are linked to one investor, and whether the operator is an SEC-registered transfer agent.",
+              "enum": ["mpl-3643", "securitize-ds", "superstate", "centrifuge", "token-2022-direct", "other", "none"]
+            },
+            "standardOther": {
+              "type": ["string", "null"],
+              "description": "Required when standard is \"other\": the framework's name."
+            },
+            "transferAgent": {
+              "type": "object",
+              "description": "Whether a registered transfer agent maintains the official holder record. Securitize, Superstate and Centrifuge hold SEC registration; MPL-3643 and bare Token-2022 do not, so an issuer using those must appoint one separately or establish that none is required.",
+              "required": ["secRegistered"],
+              "properties": {
+                "secRegistered": { "type": "boolean" },
+                "name": { "type": ["string", "null"] },
+                "officialRecord": {
+                  "type": "string",
+                  "description": "Whether the chain is the official holder record or a mirror of an off-chain register. Governs what happens on a chain reorganization or a contested transfer.",
+                  "enum": ["on-chain", "off-chain-authoritative", "hybrid"]
+                }
+              }
+            },
+            "investorIdentityLinking": {
+              "type": "boolean",
+              "description": "Whether the framework links a person's multiple wallets to one investor identity. US holder-counting rules (Rule 506(b)'s 35 non-accredited purchasers, Section 12(g) thresholds) count persons, not accounts. False means those limits need an off-chain control."
             },
             "modules": {
               "type": "array",

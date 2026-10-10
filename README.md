@@ -41,6 +41,8 @@ Solana's enforcement model makes this mapping chain-specific rather than cosmeti
 
 That split is the thing a lawyer has to understand. A Regulation S residency restriction is a boundary rule; a Regulation S distribution compliance period is a per-transfer rule; and the transfer hook cannot be added to a mint after creation, so the choice is made before the first token exists.
 
+**The schedule maps Solana's primitives rather than one framework.** MPL-3643, Securitize's DS Protocol, Superstate and Centrifuge all compose the same three building blocks: frozen-by-default accounts with a thaw decision, a Token-2022 transfer hook, and a permanent delegate. They differ on who holds the thaw decision, whether a person's wallets are linked to one investor identity, and whether the operator is an SEC-registered transfer agent. Those last two change the legal analysis; the rest does not. The schedule covers all five paths and says which rows the choice affects.
+
 ## Scope
 
 **In scope:** United States (Regulation D 506(b) and 506(c), Regulation S, Rule 144, transfer agent and recordkeeping considerations) and the European Union (MiCA, the DLT Pilot Regime, prospectus requirements). Stablecoin settlement legs are addressed under the GENIUS Act.

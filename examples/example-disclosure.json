@@ -45,6 +45,12 @@
     },
     "enforcement": {
       "standard": "mpl-3643",
+      "transferAgent": {
+        "secRegistered": false,
+        "name": null,
+        "officialRecord": "off-chain-authoritative"
+      },
+      "investorIdentityLinking": true,
       "modules": ["country", "investorCap", "lockup", "affiliateVolume"],
       "gateProgram": "Examp1eGateConfig1111111111111111111111111",
       "claimTopics": ["KYC", "AML", "residency", "accreditation", "sanctions-screening"],
