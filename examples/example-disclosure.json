@@ -1,0 +1,86 @@
+{
+  "_comment": "WORKED EXAMPLE, NOT A REAL OFFERING. Meridian Short Duration Credit Fund is a fictional issuer invented for this example. Every address below is a placeholder in valid base58 form, not a real Solana account. Do not copy the values; copy the shape.",
+
+  "schemaVersion": "0.1",
+  "mint": "Examp1eMint11111111111111111111111111111111",
+  "tokenStandard": "mpl-3643",
+  "assetName": "Meridian Short Duration Credit Fund, Class A Units",
+  "publishedAt": "2026-10-09T14:00:00Z",
+  "validUntil": "2027-04-09T14:00:00Z",
+
+  "issuer": {
+    "legalName": "Meridian Credit Partners SPC LLC",
+    "jurisdiction": "US-DE",
+    "entityType": "Delaware series limited liability company",
+    "registrationNumber": "DE-0000000",
+    "contact": "investors@example-meridian.invalid"
+  },
+
+  "instrument": {
+    "type": "fund units",
+    "underlyingAsset": "Diversified portfolio of short duration corporate credit, weighted average maturity under 18 months",
+    "governingLaw": "Delaware",
+    "offeringExemption": ["Reg D 506(c)", "Reg S"],
+    "isSecurity": true
+  },
+
+  "controls": {
+    "freezeAuthority": {
+      "address": "Examp1eFreezeAuth1111111111111111111111111",
+      "heldBy": "Meridian Credit Partners SPC LLC, acting through its manager; 2-of-3 multisig held by the CFO, the general counsel, and an independent director",
+      "conditions": "Accounts are created frozen and thawed only on verified eligibility. An existing account is frozen on a sanctions screening hit, on an order of a court or regulator, or on the lapse of an eligibility attestation that is not renewed within 30 days."
+    },
+    "permanentDelegate": {
+      "address": "Examp1ePermDe1egate111111111111111111111111",
+      "heldBy": "Meridian Credit Partners SPC LLC, same 2-of-3 multisig as the freeze authority",
+      "conditions": "Used only to effect a redemption the holder has requested, to reverse an erroneous issuance within 10 days of mint, to comply with an order of a court or regulator, or to transfer units on the death or dissolution of a holder. The manager will publish a record of each use within 5 business days."
+    },
+    "canForceTransfer": true,
+    "canPause": true,
+    "transferRestrictions": ["US-1", "US-2", "US-5", "US-6", "US-8", "US-9", "US-10", "US-12", "US-13", "US-15"],
+    "upgradeable": {
+      "programsUpgradeable": false,
+      "upgradeAuthority": null,
+      "heldBy": null
+    }
+  },
+
+  "custody": {
+    "custodian": "Example Trust Company, N.A.",
+    "arrangement": "Underlying credit instruments are held in a segregated custody account in the name of the series. The custodian is not an affiliate of the issuer and reports holdings monthly."
+  },
+
+  "redemption": {
+    "available": true,
+    "terms": "Quarterly redemption windows with 30 days' notice. Minimum redemption of 1,000 units. The manager may suspend redemptions if the fund cannot liquidate positions in an orderly manner, and must disclose any suspension within 2 business days.",
+    "settlementAsset": "USDC (mint address to be stated here)"
+  },
+
+  "documents": {
+    "offeringDocuments": "https://example-meridian.invalid/offering (access-gated; available to verified prospective investors)",
+    "auditReports": [
+      {
+        "uri": "https://example-meridian.invalid/audits/2026-h1.pdf",
+        "date": "2026-08-15",
+        "provider": "Example Audit LLP"
+      }
+    ],
+    "smartContractAudits": []
+  },
+
+  "fees": {
+    "management": "1.00% per annum of net asset value, accrued daily",
+    "redemption": "None within standard windows; 0.50% for off-window redemptions at the manager's discretion",
+    "transfer": "None charged by the issuer; network fees apply"
+  },
+
+  "valuation": {
+    "methodology": "Amortized cost for instruments maturing within 60 days; third-party pricing service marks otherwise",
+    "frequency": "Daily, published each business day"
+  },
+
+  "riskFactors": "https://example-meridian.invalid/risk-factors",
+  "transferAgent": null,
+  "secondaryVenues": [],
+  "priorIncidents": []
+}

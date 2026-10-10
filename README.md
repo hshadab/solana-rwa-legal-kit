@@ -19,7 +19,7 @@ This repository publishes that missing layer as a public good.
 | Component | Status |
 | --- | --- |
 | [Transfer restriction schedule](docs/transfer-restriction-schedule.md) | Draft, pending verification against MPL-3643 program documentation |
-| Disclosure standard | In progress |
+| [Disclosure standard](docs/disclosure-standard.md) | Draft v0.1, with [JSON Schema](schema/rwa-disclosure-v0.1.json) and a [worked example](examples/example-disclosure.json) |
 | Model token terms and conditions | Planned |
 | Subscription agreement and investor questionnaire | Planned |
 | Risk factors, including Solana and MPL-3643 specific risks | Planned |
@@ -30,7 +30,11 @@ This repository publishes that missing layer as a public good.
 
 ## The core idea
 
-The central artifact is the **transfer restriction schedule**: a table where each row states a legal restriction, the authority it comes from, the words that express it in the offering documents, and the on-chain mechanism that enforces it. A lawyer and an engineer can read the same row and confirm the token does what the documents promise.
+There are two central artifacts.
+
+The **disclosure standard** defines what an issuer must publish about a tokenized asset, keyed to the token mint, so that a wallet, venue, or investor can resolve a mint address to a consistent account of who the issuer is, what the instrument is, and what powers the issuer holds over holder tokens. Its required `controls` block is the part that matters most: freeze authority, permanent delegate, and force-transfer capability are the most consequential and least disclosed facts about a permissioned token, and a validator can check those claims against what the mint actually shows on-chain.
+
+The **transfer restriction schedule** is the other: a table where each row states a legal restriction, the authority it comes from, the words that express it in the offering documents, and the on-chain mechanism that enforces it. A lawyer and an engineer can read the same row and confirm the token does what the documents promise.
 
 Solana's enforcement model makes this mapping chain-specific rather than cosmetic. Unlike ERC-3643 on EVM chains, which checks compliance inside every transfer, MPL-3643 enforces eligibility at freeze and thaw: token accounts are created frozen, and only a wallet that passes the compliance checks can have one thawed. Rules that genuinely require per-transfer evaluation, such as lockups and volume limits, use a Token-2022 transfer hook instead. A Regulation S distribution compliance period and a Rule 144 holding period therefore map to different mechanisms than they would on Ethereum, and the documents have to say which.
 

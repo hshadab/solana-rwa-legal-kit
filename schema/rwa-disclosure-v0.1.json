@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/hshadab/solana-rwa-legal-kit/schema/rwa-disclosure-v0.1.json",
+  "title": "RWA Disclosure Standard v0.1",
+  "description": "Standardized disclosure for issuers of permissioned real-world assets and tokenized securities on Solana. Keyed to the token mint. Published and signed by the issuer; no registry operator asserts the contents are accurate.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "mint",
+    "tokenStandard",
+    "assetName",
+    "publishedAt",
+    "validUntil",
+    "issuer",
+    "instrument",
+    "controls",
+    "custody",
+    "redemption",
+    "documents"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "mint": {
+      "type": "string",
+      "description": "Solana mint address, base58",
+      "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$"
+    },
+    "tokenStandard": {
+      "type": "string",
+      "enum": ["mpl-3643", "token-2022", "spl-token"]
+    },
+    "assetName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the instrument as used in the offering documents"
+    },
+    "publishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validUntil": {
+      "type": "string",
+      "format": "date-time",
+      "description": "After this time the disclosure should be treated as stale"
+    },
+    "issuer": {
+      "type": "object",
+      "required": ["legalName", "jurisdiction", "entityType", "contact"],
+      "properties": {
+        "legalName": { "type": "string", "minLength": 1 },
+        "jurisdiction": {
+          "type": "string",
+          "description": "Jurisdiction of organization, ISO 3166 plus subdivision where relevant, e.g. US-DE"
+        },
+        "entityType": { "type": "string" },
+        "registrationNumber": {
+          "type": ["string", "null"],
+          "description": "Company or registration number where one exists publicly"
+        },
+        "contact": {
+          "type": "string",
+          "description": "A working contact address for investors"
+        }
+      }
+    },
+    "instrument": {
+      "type": "object",
+      "required": ["type", "underlyingAsset", "governingLaw", "offeringExemption", "isSecurity"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "e.g. fund units, debt note, treasury-backed token, equity"
+        },
+        "underlyingAsset": { "type": "string" },
+        "governingLaw": { "type": "string" },
+        "offeringExemption": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Exemptions relied upon, e.g. Reg D 506(c), Reg S"
+        },
+        "isSecurity": {
+          "type": "boolean",
+          "description": "Whether the issuer treats the instrument as a security"
+        }
+      }
+    },
+    "controls": {
+      "type": "object",
+      "description": "Powers the issuer holds over holder tokens. Required in full; this is the core of the standard.",
+      "required": [
+        "freezeAuthority",
+        "permanentDelegate",
+        "canForceTransfer",
+        "canPause",
+        "transferRestrictions",
+        "upgradeable"
+      ],
+      "properties": {
+        "freezeAuthority": { "$ref": "#/$defs/authority" },
+        "permanentDelegate": {
+          "oneOf": [
+            { "$ref": "#/$defs/authority" },
+            { "type": "null", "description": "null if the extension is not enabled" }
+          ]
+        },
+        "canForceTransfer": {
+          "type": "boolean",
+          "description": "Whether the issuer can move holder tokens without holder signature"
+        },
+        "canPause": {
+          "type": "boolean",
+          "description": "Whether transfers can be globally halted"
+        },
+        "transferRestrictions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Identifiers from the transfer restriction schedule, e.g. US-1, US-6, US-12"
+        },
+        "upgradeable": {
+          "type": "object",
+          "required": ["programsUpgradeable"],
+          "properties": {
+            "programsUpgradeable": { "type": "boolean" },
+            "upgradeAuthority": { "type": ["string", "null"] },
+            "heldBy": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    "custody": {
+      "type": "object",
+      "required": ["custodian", "arrangement"],
+      "properties": {
+        "custodian": {
+          "type": "string",
+          "description": "Who holds the underlying asset; \"n/a\" where there is none"
+        },
+        "arrangement": { "type": "string" }
+      }
+    },
+    "redemption": {
+      "type": "object",
+      "required": ["available", "terms", "settlementAsset"],
+      "properties": {
+        "available": { "type": "boolean" },
+        "terms": {
+          "type": "string",
+          "description": "Conditions, windows, and minimums"
+        },
+        "settlementAsset": {
+          "type": "string",
+          "description": "What redemption pays in, including mint address if on-chain"
+        }
+      }
+    },
+    "documents": {
+      "type": "object",
+      "required": ["offeringDocuments", "auditReports", "smartContractAudits"],
+      "properties": {
+        "offeringDocuments": {
+          "type": "string",
+          "description": "URI; may be access-gated"
+        },
+        "auditReports": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/datedDocument" }
+        },
+        "smartContractAudits": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/datedDocument" },
+          "description": "Security audits of any custom program. An empty array means none, and readers should treat that as a risk signal."
+        }
+      }
+    },
+    "fees": {
+      "type": "object",
+      "description": "Recommended, not required",
+      "properties": {
+        "management": { "type": "string" },
+        "redemption": { "type": "string" },
+        "transfer": { "type": "string" }
+      }
+    },
+    "valuation": {
+      "type": "object",
+      "description": "Recommended, not required",
+      "properties": {
+        "methodology": { "type": "string" },
+        "frequency": { "type": "string" }
+      }
+    },
+    "riskFactors": {
+      "type": "string",
+      "description": "Recommended. URI to the risk factor disclosure."
+    },
+    "transferAgent": {
+      "type": ["string", "null"],
+      "description": "Recommended. Name of the transfer agent, where one is appointed."
+    },
+    "secondaryVenues": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Recommended. Venues where the token is expected to trade."
+    },
+    "priorIncidents": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Recommended. Prior freezes, forced transfers, failed redemptions, or security incidents."
+    }
+  },
+  "$defs": {
+    "authority": {
+      "type": "object",
+      "required": ["address", "heldBy", "conditions"],
+      "properties": {
+        "address": {
+          "type": "string",
+          "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$"
+        },
+        "heldBy": {
+          "type": "string",
+          "description": "The human or entity controlling the key, not just the address. An address alone tells a reader nothing about who can act."
+        },
+        "conditions": {
+          "type": "string",
+          "description": "The stated conditions under which this power will be used"
+        }
+      }
+    },
+    "datedDocument": {
+      "type": "object",
+      "required": ["uri", "date"],
+      "properties": {
+        "uri": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "provider": { "type": "string" }
+      }
+    }
+  }
+}
